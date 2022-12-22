@@ -1,0 +1,14 @@
+#!/bin/sh
+
+set +a
+. /etc/minio/minio.conf
+set -a
+
+export HOME=/var/lib/minio
+
+# Check if we have MINIO_OPTS set, if not set it to our default
+if [ -z "$MINIO_OPTS" ]; then
+	export MINIO_OPTS="/var/lib/minio"
+fi
+
+exec minio server $MINIO_OPTS
