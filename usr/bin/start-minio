@@ -1,8 +1,8 @@
 #!/bin/sh
 
-set +a
-. /etc/minio/minio.conf
 set -a
+. /etc/minio/minio.conf
+set +a
 
 export HOME=/var/lib/minio
 
