@@ -24,6 +24,6 @@ chown root:minio /etc/minio
 chmod 0750 /etc/minio
 
 # Write out environment and fix perms of the config file
-set | grep '^MINIO_' > /etc/minio/minio.conf || true
+set | grep -E '^MINIO_' > /etc/minio/minio.conf || true
 chown root:minio /etc/minio/minio.conf
 chmod 0640 /etc/minio/minio.conf
