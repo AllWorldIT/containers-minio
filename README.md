@@ -28,4 +28,16 @@ Username to use.
 
 Password to use for for the root user.
 
+# Administration
+
+The `s3` mc alias is setup automatically.
+
+One can admin minio by using...
+
+  docker-compose exec minio /bin/bash
+
+Then running mc ...
+
+  mc ls s3\mybucket
+
 

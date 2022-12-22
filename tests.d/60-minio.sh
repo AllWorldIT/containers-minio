@@ -60,10 +60,8 @@ fi
 # Try upload and download
 #
 
-# Setup mc
-mc alias set minioserver http://localhost:9000 "$MINIO_ROOT_USER" "$MINIO_ROOT_PASSWORD"
 # Create bucket
-mc mb minioserver/citest
+mc mb s3/citest
 
 # Upload file
 echo PASSED > /tmp/file.txt
