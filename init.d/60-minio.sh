@@ -1,7 +1,5 @@
 #!/bin/sh
 
-set -ex
-
 chown -R minio:minio /var/lib/minio
 
 chown root:minio /var/lib/minio
