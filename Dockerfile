@@ -138,4 +138,5 @@ VOLUME ["/var/lib/minio"]
 
 EXPOSE 9000:9001
 
-HEALTHCHECK CMD curl --fail http://localhost:9000/minio/health/live
+HEALTHCHECK CMD curl --silent --fail http://localhost:9000/minio/health/live
+
