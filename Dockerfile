@@ -136,6 +136,6 @@ RUN set -ex; \
 
 VOLUME ["/var/lib/minio"]
 
-EXPOSE 9000
+EXPOSE 9000:9001
 
 HEALTHCHECK CMD curl -f http://localhost:9000/minio/health/live
