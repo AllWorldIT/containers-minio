@@ -20,16 +20,21 @@
 # IN THE SOFTWARE.
 
 
-# Export sourced variables
-set -a
-. /etc/minio/minio.conf
-set +a
-
-export HOME=/var/lib/minio
-
-# Check if we have MINIO_OPTS set, if not set it to our default
-if [ -z "$MINIO_OPTS" ]; then
-	export MINIO_OPTS="/var/lib/minio"
+# Check we get a positive response back when using IPv4
+if ! curl -H "User-Agent: Health Check" --silent --fail -ipv4 http://localhost:9000/minio/health/live; then
+    echo -e "ERROR: Health check failed for Minio using IPv4"
+    false
 fi
 
-exec minio server --console-address :9001 $MINIO_OPTS
+
+# Return if we don't have IPv6 support
+if [ -z "$(ip -6 route show default)" ]; then
+    return
+fi
+
+
+# Check we get a positive response back when using IPv6
+if ! curl -H "User-Agent: Health Check" --silent --fail -ipv6 http://localhost:9000/minio/health/live; then
+    echo -e "ERROR: Health check failed for Minio using IPv6"
+    false
+fi

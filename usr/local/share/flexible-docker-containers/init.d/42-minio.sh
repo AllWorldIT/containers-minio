@@ -20,16 +20,44 @@
 # IN THE SOFTWARE.
 
 
-# Export sourced variables
-set -a
-. /etc/minio/minio.conf
-set +a
+# Make sure our data directory perms are correct
+chown root:minio /var/lib/minio
+chmod 0770 /var/lib/minio
 
-export HOME=/var/lib/minio
+echo "NOTICE: Initializing settings"
 
-# Check if we have MINIO_OPTS set, if not set it to our default
-if [ -z "$MINIO_OPTS" ]; then
-	export MINIO_OPTS="/var/lib/minio"
+if [ -z "$MINIO_ROOT_USER" ]; then
+	echo "WARNING: Environment variable 'MINIO_ROOT_USER' not set, minio will use defaults!"
+	export MINIO_ROOT_USER=minioadmin
 fi
 
-exec minio server --console-address :9001 $MINIO_OPTS
+if [ -z "$MINIO_ROOT_PASSWORD" ]; then
+	echo "WARNING: Environment variable 'MINIO_ROOT_PASSWORD' not set, minio will use defaults!"
+	export MINIO_ROOT_PASSWORD=minioadmin
+fi
+
+# To make admin easy, we're going to load the credentials into the mc config file
+mkdir /root/.mc
+cat <<EOF > /root/.mc/config.json
+{
+	"version": "10",
+	"aliases": {
+		"s3": {
+			"url": "http://localhost:9000",
+			"accessKey": "$MINIO_ROOT_USER",
+			"secretKey": "$MINIO_ROOT_PASSWORD",
+			"api": "s3v4",
+			"path": "auto"
+		}
+	}
+}
+EOF
+
+# Create minio configuration directory
+chown root:minio /etc/minio
+chmod 0750 /etc/minio
+
+# Write out environment and fix perms of the config file
+set | grep -E '^MINIO_' > /etc/minio/minio.conf || true
+chown root:minio /etc/minio/minio.conf
+chmod 0640 /etc/minio/minio.conf

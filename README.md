@@ -1,43 +1,76 @@
-# Introduction
+[![pipeline status](https://gitlab.conarx.tech/containers/minio/badges/main/pipeline.svg)](https://gitlab.conarx.tech/containers/minio/-/commits/main)
 
-This is a Minio container.
+# Container Information
 
-See the [Alpine Base Image](https://gitlab.iitsp.com/allworldit/docker/alpine) project for additional configuration.
+[Container Source](https://gitlab.conarx.tech/containers/minio) - [GitHub Mirror](https://github.com/AllWorldIT/containers-minio)
 
-# Minio
+This is the Conarx Containers Minio image, it provides the Minio S3 server and Minio Client within the same Docker image.
 
-All environment variables beginning with `MINIO_` are passed to `minio`.
 
-## Volume: /var/lib/minio
 
-Data directory.
+# Mirrors
 
-## Ports: 9000
+|  Provider  |  Repository                            |
+|------------|----------------------------------------|
+| DockerHub  | allworldit/minio                      |
+| Conarx     | registry.conarx.tech/containers/minio |
 
-Exposes Minio port 9000.
+
+
+# Commercial Support
+
+Commercial support is available from [Conarx](https://conarx.tech).
+
+
+
+# Environment Variables
+
+Additional environment variables are available from...
+* [Conarx Containers Alpine image](https://gitlab.conarx.tech/containers/alpine).
+
 
 ## MINIO_OPTS
 
 Options passed to `minio server`, defaults to `/var/lib/minio`.
 
+
 ## MINIO_ROOT_USER
 
-Username to use.
+Username to use, this will default to `minioadmin` if not specified which is terribly insecure.
+
 
 ## MINIO_ROOT_PASSWORD
 
-Password to use for for the root user.
+Password to use for for the root user, this will default to `minioadmin` if not specified which is terribly insecure.
+
+
+## MINIO_*
+
+All other environment variables beginning with `MINIO_` will be passed to Minio.
+
+
+
+# Volumes
+
+
+## /var/lib/minio
+
+Minio data directory. This should be on an XFS filesystem as recommended in the Minio documentation.
+
+
+
+# Exposed Ports
+
+Minio port 9000 and 9001 is exposed.
+
+
 
 # Administration
 
 The `s3` mc alias is setup automatically.
 
-One can admin minio by using...
+The Minio admin command can be executed from the host using...
 
-  docker-compose exec minio /bin/bash
-
-Then running mc ...
-
-  mc ls s3\mybucket
-
-
+```
+docker-compose exec minio mc ls s3\mybucket
+```
