@@ -1,4 +1,4 @@
-FROM registry.conarx.tech/containers/alpine/3.17 as builder
+FROM registry.conarx.tech/containers/alpine/edge as builder
 
 # Install libs we need
 RUN set -ex; \
@@ -92,13 +92,13 @@ RUN set -ex; \
 
 
 
-FROM registry.conarx.tech/containers/alpine/3.17
+FROM registry.conarx.tech/containers/alpine/edge
 
 
 ARG VERSION_INFO=
 LABEL org.opencontainers.image.authors   = "Nigel Kukard <nkukard@conarx.tech>"
-LABEL org.opencontainers.image.version   = "3.17"
-LABEL org.opencontainers.image.base.name = "registry.conarx.tech/containers/alpine/3.17"
+LABEL org.opencontainers.image.version   = "edge"
+LABEL org.opencontainers.image.base.name = "registry.conarx.tech/containers/alpine/edge"
 
 
 # Copy in built binaries
