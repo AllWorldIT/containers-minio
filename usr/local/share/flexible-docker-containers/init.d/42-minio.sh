@@ -20,19 +20,24 @@
 # IN THE SOFTWARE.
 
 
+fdc_notice "Setting up Minio permissions"
 # Make sure our data directory perms are correct
 chown root:minio /var/lib/minio
 chmod 0770 /var/lib/minio
+# Set permissions on Minio configuration
+chown root:minio /etc/minio
+chmod 0750 /etc/minio
 
-echo "NOTICE: Initializing settings"
+
+fdc_notice "Initializing Minio settings"
 
 if [ -z "$MINIO_ROOT_USER" ]; then
-	echo "WARNING: Environment variable 'MINIO_ROOT_USER' not set, minio will use defaults!"
+	fdc_warn "Environment variable 'MINIO_ROOT_USER' not set, minio will use defaults!"
 	export MINIO_ROOT_USER=minioadmin
 fi
 
 if [ -z "$MINIO_ROOT_PASSWORD" ]; then
-	echo "WARNING: Environment variable 'MINIO_ROOT_PASSWORD' not set, minio will use defaults!"
+	fdc_warn "Environment variable 'MINIO_ROOT_PASSWORD' not set, minio will use defaults!"
 	export MINIO_ROOT_PASSWORD=minioadmin
 fi
 
@@ -53,9 +58,6 @@ cat <<EOF > /root/.mc/config.json
 }
 EOF
 
-# Create minio configuration directory
-chown root:minio /etc/minio
-chmod 0750 /etc/minio
 
 # Write out environment and fix perms of the config file
 set | grep -E '^MINIO_' > /etc/minio/minio.conf || true

@@ -32,4 +32,5 @@ if [ -z "$MINIO_OPTS" ]; then
 	export MINIO_OPTS="/var/lib/minio"
 fi
 
+# shellcheck disable=SC2086
 exec minio server --console-address :9001 $MINIO_OPTS
