@@ -10,16 +10,42 @@ This is the Conarx Containers Minio image, it provides the Minio S3 server and M
 
 # Mirrors
 
-|  Provider  |  Repository                            |
-|------------|----------------------------------------|
+|  Provider  |  Repository                           |
+|------------|---------------------------------------|
 | DockerHub  | allworldit/minio                      |
 | Conarx     | registry.conarx.tech/containers/minio |
 
 
 
+# Conarx Containers
+
+All our Docker images are part of our Conarx Containers product line. Images are generally based on Alpine Linux and track the
+Alpine Linux major and minor version in the format of `vXX.YY`.
+
+Images built from source track both the Alpine Linux major and minor versions in addition to the main software component being
+built in the format of `vXX.YY-AA.BB`, where `AA.BB` is the main software component version.
+
+Our images are built using our Flexible Docker Containers framework which includes the below features...
+
+- Flexible container initialization and startup
+- Integrated unit testing
+- Advanced multi-service health checks
+- Native IPv6 support for all containers
+- Debugging options
+
+
+
+# Community Support
+
+Please use the project [Issue Tracker](https://gitlab.conarx.tech/containers/minio/-/issues).
+
+
+
 # Commercial Support
 
-Commercial support is available from [Conarx](https://conarx.tech).
+Commercial support for all our Docker images is available from [Conarx](https://conarx.tech).
+
+We also provide consulting services to create and maintain Docker images to meet your exact needs.
 
 
 
@@ -73,4 +99,34 @@ The Minio admin command can be executed from the host using...
 
 ```
 docker-compose exec minio mc ls s3\mybucket
+```
+
+
+# Configuration Exampmle
+
+
+```yaml
+version: '3.9'
+
+services:
+  minio:
+    image: registry.gitlab.iitsp.com/allworldit/docker/minio/v3.17:latest
+    environment:
+      - MINIO_BROWSER_REDIRECT_URL=https://console.s3.countrya-1.example.com
+      - MINIO_ROOT_USER=xxxxx
+      - MINIO_ROOT_PASSWORD=aaaaa
+    volumes:
+      - ./data:/var/lib/minio
+    ports:
+      - '9000:9000'
+      - '9001:9001'
+    extra_hosts:
+      - "s3.countrya-1.example.com:172.16.0.1"
+    networks:
+      - internal
+
+networks:
+  internal:
+    driver: bridge
+    enable_ipv6: true
 ```
