@@ -1,7 +1,29 @@
+# Copyright (c) 2022-2023, AllWorldIT.
+#
+# Permission is hereby granted, free of charge, to any person obtaining a copy
+# of this software and associated documentation files (the "Software"), to
+# deal in the Software without restriction, including without limitation the
+# rights to use, copy, modify, merge, publish, distribute, sublicense, and/or
+# sell copies of the Software, and to permit persons to whom the Software is
+# furnished to do so, subject to the following conditions:
+#
+# The above copyright notice and this permission notice shall be included in
+# all copies or substantial portions of the Software.
+#
+# THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+# IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+# FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+# AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+# LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+# FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
+# IN THE SOFTWARE.
+
+
 FROM registry.conarx.tech/containers/alpine/edge as builder
 
+
 # Install libs we need
-RUN set -ex; \
+RUN set -eux; \
 	true "Installing build dependencies"; \
 # from https://git.alpinelinux.org/aports/tree/main/pdns/APKBUILD
 	apk add --no-cache \
@@ -13,7 +35,7 @@ RUN set -ex; \
 		jq
 
 # Download packages
-RUN set -ex; \
+RUN set -eux; \
 	mkdir -p build; \
 	cd build; \
 	# Lets get the latest minio release...
@@ -40,7 +62,7 @@ RUN set -ex; \
 
 
 # Build and install Minio
-RUN set -ex; \
+RUN set -eux; \
 	cd build; \
 	source VERSIONS.env; \
 	cd minio; \
@@ -60,7 +82,7 @@ RUN set -ex; \
 	install -Dm755 bin/minio -t /build/minio-root/usr/bin/
 
 # Build and install Minio client
-RUN set -ex; \
+RUN set -eux; \
 	cd build; \
 	source VERSIONS.env; \
 	cd mc; \
@@ -80,7 +102,7 @@ RUN set -ex; \
 	install -Dm755 bin/mcli /build/minio-root/usr/bin/mc
 
 
-RUN set -ex; \
+RUN set -eux; \
 	cd build/minio-root; \
 	scanelf --recursive --nobanner --osabi --etype "ET_DYN,ET_EXEC" .  | awk '{print $3}' | xargs \
 		strip \
@@ -105,7 +127,7 @@ LABEL org.opencontainers.image.base.name = "registry.conarx.tech/containers/alpi
 COPY --from=builder /build/minio-root /
 
 
-RUN set -ex; \
+RUN set -eux; \
 	true "Utilities"; \
 	apk add --no-cache \
 		curl \
@@ -122,8 +144,8 @@ COPY etc/supervisor/conf.d/minio.conf /etc/supervisor/conf.d/minio.conf
 COPY usr/local/share/flexible-docker-containers/init.d/42-minio.sh /usr/local/share/flexible-docker-containers/init.d
 COPY usr/local/share/flexible-docker-containers/tests.d/42-minio.sh /usr/local/share/flexible-docker-containers/tests.d
 COPY usr/bin/start-minio /usr/bin/start-minio
-RUN set -ex; \
-	true "Versioning"; \
+RUN set -eux; \
+	true "Flexible Docker Containers"; \
 	if [ -n "$VERSION_INFO" ]; then echo "$VERSION_INFO" >> /.VERSION_INFO; fi; \
 	mkdir /etc/minio; \
 	chown root:root \
