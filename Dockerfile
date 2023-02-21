@@ -140,7 +140,9 @@ RUN set -eux; \
 
 # Minio
 COPY etc/supervisor/conf.d/minio.conf /etc/supervisor/conf.d/minio.conf
+COPY usr/local/share/flexible-docker-containers/healthcheck.d/42-minio.sh /usr/local/share/flexible-docker-containers/healthcheck.d
 COPY usr/local/share/flexible-docker-containers/init.d/42-minio.sh /usr/local/share/flexible-docker-containers/init.d
+COPY usr/local/share/flexible-docker-containers/pre-init-tests.d/42-minio.sh /usr/local/share/flexible-docker-containers/pre-init-tests.d
 COPY usr/local/share/flexible-docker-containers/tests.d/42-minio.sh /usr/local/share/flexible-docker-containers/tests.d
 COPY usr/bin/start-minio /usr/bin/start-minio
 RUN set -eux; \
@@ -156,6 +158,3 @@ RUN set -eux; \
 VOLUME ["/var/lib/minio"]
 
 EXPOSE 9000:9001
-
-HEALTHCHECK CMD curl --silent --fail http://localhost:9000/minio/health/live || exit 1
-
