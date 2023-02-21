@@ -21,7 +21,7 @@
 
 
 # Check we get a positive response back when using IPv4
-if ! curl -H "User-Agent: Health Check" --silent --fail -ipv4 http://localhost:9000/minio/health/live; then
+if ! curl -H "User-Agent: Health Check" --silent --fail --ipv4 http://localhost:9000/minio/health/live; then
 	fdc_error "Health check failed for Minio using IPv4"
 	false
 fi
@@ -34,7 +34,7 @@ fi
 
 
 # Check we get a positive response back when using IPv6
-if ! curl -H "User-Agent: Health Check" --silent --fail -ipv6 http://localhost:9000/minio/health/live; then
+if ! curl -H "User-Agent: Health Check" --silent --fail --ipv6 http://localhost:9000/minio/health/live; then
 	fdc_error "Health check failed for Minio using IPv6"
 	false
 fi
