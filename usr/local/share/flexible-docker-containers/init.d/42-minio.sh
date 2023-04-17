@@ -42,7 +42,9 @@ if [ -z "$MINIO_ROOT_PASSWORD" ]; then
 fi
 
 # To make admin easy, we're going to load the credentials into the mc config file
-mkdir /root/.mc
+if [ ! -d /root/.mc ]; then
+	mkdir /root/.mc
+fi
 cat <<EOF > /root/.mc/config.json
 {
 	"version": "10",
