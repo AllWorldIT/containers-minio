@@ -21,6 +21,7 @@
 
 FROM registry.conarx.tech/containers/alpine/3.21 as builder
 
+COPY --from=registry.conarx.tech/containers/go/edge:1.24.3 /opt/go-1.24.3 /opt/go-1.24.3
 
 # Install libs we need
 RUN set -eux; \
@@ -30,7 +31,6 @@ RUN set -eux; \
 		build-base \
 		\
 		curl \
-		go \
 		git \
 		jq
 
@@ -64,6 +64,14 @@ RUN set -eux; \
 # Build and install Minio
 RUN set -eux; \
 	cd build; \
+	# Setup environment
+	for i in /opt/*/ld-musl-x86_64.path; do \
+		cat "$i" >> /etc/ld-musl-x86_64.path; \
+	done; \
+	for i in /opt/*/PATH; do \
+		export PATH="$(cat "$i"):$PATH"; \
+	done; \
+	# Pull in version info
 	source VERSIONS.env; \
 	cd minio; \
 	prefix='github.com/minio/minio/cmd'; \
@@ -84,6 +92,14 @@ RUN set -eux; \
 # Build and install Minio client
 RUN set -eux; \
 	cd build; \
+	# Setup environment
+	for i in /opt/*/ld-musl-x86_64.path; do \
+		cat "$i" >> /etc/ld-musl-x86_64.path; \
+	done; \
+	for i in /opt/*/PATH; do \
+		export PATH="$(cat "$i"):$PATH"; \
+	done; \
+	# Pull in version info
 	source VERSIONS.env; \
 	cd mc; \
 	prefix='github.com/minio/mc/cmd'; \
